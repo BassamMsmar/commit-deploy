@@ -1,0 +1,62 @@
+
+📦 ملخص إعداد النسخ الاحتياطي من PostgreSQL إلى Google Drive باستخدام rclone
+
+1. تثبيت rclone (إن لم يكن مثبتًا):
+    curl https://rclone.org/install.sh | sudo bash
+
+2. إعداد rclone مع Google Drive:
+    rclone config
+    > n
+    > google_drive
+    > 22  (Google Drive)
+    > [Enter] (client_id)
+    > [Enter] (client_secret)
+    > 1 (scope = full access)
+    > [Enter] (service_account_file)
+    > n (advanced config)
+    > n (use web browser) ❌
+    > نفّذ على جهازك المحلي:
+        rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
+      ثم الصق الـ config_token الناتج في السيرفر
+    > n (Team Drive)
+    > y (حفظ)
+
+3. إنشاء سكربت النسخ الاحتياطي:
+    nano ~/backup_postgres_to_drive.sh
+
+--- محتوى السكربت ---
+#!/bin/bash
+
+DB_NAME="aljeed_db"
+DB_USER="admin"
+DB_PASS="Aa654321"
+DB_HOST="localhost"
+DB_PORT="5432"
+
+BACKUP_DIR="$HOME/db_backups"
+mkdir -p "$BACKUP_DIR"
+
+FILE_NAME="${DB_NAME}_backup_$(date +%F_%H-%M-%S).sql.gz"
+FILE_PATH="$BACKUP_DIR/$FILE_NAME"
+
+PGPASSWORD="$DB_PASS" pg_dump -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" "$DB_NAME" | gzip > "$FILE_PATH"
+
+rclone copy "$FILE_PATH" google_drive:backups/
+
+rclone delete --min-age 30d google_drive:backups/
+# rm "$FILE_PATH"
+
+-----------------------
+
+4. جعله قابل للتنفيذ:
+    chmod +x ~/backup_postgres_to_drive.sh
+
+5. اختباره يدويًا:
+    ~/backup_postgres_to_drive.sh
+
+6. إضافة جدولة يومية في cron:
+    crontab -e
+    > أضف السطر:
+      0 2 * * * /root/backup_postgres_to_drive.sh
+
+✅ سيتم أخذ نسخة احتياطية يوميًا الساعة 2 صباحًا ورفعها تلقائيًا إلى Google Drive
