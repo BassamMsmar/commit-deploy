@@ -95,6 +95,10 @@ sudo systemctl reload nginx
 ## 🔐 2. SSL Certificates (Certbot)
 
 To issue certificates:
+# install 
+```bach certbot
+sudo apt install certbot python3-certbot-nginx
+```
 
 ```bash
 sudo certbot --nginx -d aljeed.shuhnaty.com -d admin.aljeed.shuhnaty.com
