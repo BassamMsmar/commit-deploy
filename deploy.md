@@ -70,10 +70,11 @@ WantedBy=multi-user.target
 `
 
 ## important commit 
-sudo systemctl daemon-reexec
-sudo systemctl daemon-reload
-sudo systemctl start gunicorn
-sudo systemctl enable gunicorn
+sudo systemctl daemon-reexec &&
+sudo systemctl daemon-reload &&
+sudo systemctl start gunicorn &&
+sudo systemctl enable gunicorn &&
+&& sudo systemctl status gunicorn
 
 ## status
 sudo systemctl status gunicorn
