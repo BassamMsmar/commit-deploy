@@ -25,4 +25,8 @@ chmod +x deploy.sh
 ./deploy.sh
 
 
+# remobe puplic keys
+ssh-keygen -R 185.213.27.212
+
+
 
