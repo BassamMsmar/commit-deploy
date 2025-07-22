@@ -60,7 +60,7 @@ After=network.target
 User=root
 Group=www-data
 WorkingDirectory=/var/www/shuhnaty360/backend
-ExecStart=/var/www/shuhnaty360/backend/venv/bin/gunicorn \
+ExecStart=/var/www/shuhnaty360/venv/bin/gunicorn \
           --workers 3 \
           --bind 127.0.0.1:8000 \
           project.wsgi:application
