@@ -1,0 +1,2 @@
+## rmove old key
+ssh-keygen -R ip
