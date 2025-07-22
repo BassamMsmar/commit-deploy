@@ -59,18 +59,22 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/home/project
-ExecStart=/home/project/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8000 myproject.wsgi:application
+WorkingDirectory=/var/www/shuhnaty360/backend
+ExecStart=/var/www/shuhnaty360/venv/bin/gunicorn \
+          --workers 3 \
+          --bind 127.0.0.1:8000 \
+          project.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
 `
 
 ## important commit 
-sudo systemctl daemon-reexec
-sudo systemctl daemon-reload
-sudo systemctl start gunicorn
-sudo systemctl enable gunicorn
+sudo systemctl daemon-reexec &&
+sudo systemctl daemon-reload &&
+sudo systemctl start gunicorn &&
+sudo systemctl enable gunicorn &&
+&& sudo systemctl status gunicorn
 
 ## status
 sudo systemctl status gunicorn
